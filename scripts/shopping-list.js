@@ -39,7 +39,6 @@ const shoppingList = (function(){
     return items.join('');
   }
   
-  
   function render() {
     // Filter item list if store prop is true by item.checked === false
     let items = [ ...store.items ];
@@ -51,6 +50,8 @@ const shoppingList = (function(){
     if (store.searchTerm) {
       items = items.filter(item => item.name.includes(store.searchTerm));
     }
+
+    $('#error').html(store.error);
   
     // render the shopping list in the DOM
     console.log('`render` ran');
@@ -68,14 +69,13 @@ const shoppingList = (function(){
       const newItemName = $('.js-shopping-list-entry').val();
 
       api.createItem(newItemName)
-        .then(res => res.json())
         .then((item) => {
           store.addItem(item);
           shoppingList.render();
-        });
+        })
+        .catch(err => store.handleError (err.message));
 
       $('.js-shopping-list-entry').val('');
-      render();
     });
   }
   
@@ -90,7 +90,8 @@ const shoppingList = (function(){
       const id = getItemIdFromElement(event.currentTarget);
       const itemChecked = store.items.find(item => id === item.id).checked;
       // store.findAndToggleChecked(id);
-      api.updateItem(id, {checked: !itemChecked});
+      api.updateItem(id, {checked: !itemChecked})
+        .catch(err => store.handleError (err.message));
       store.findAndUpdate(id, {checked: !itemChecked});
       render();
     });
@@ -103,7 +104,9 @@ const shoppingList = (function(){
       const id = getItemIdFromElement(event.currentTarget);
       // delete the item
       store.findAndDelete(id);
-      api.deleteItem(id);
+      api.deleteItem(id)
+        .catch(err => store.handleError (err.message));
+
       // render the updated shopping list
       render();
     });
@@ -115,7 +118,9 @@ const shoppingList = (function(){
       const id = getItemIdFromElement(event.currentTarget);
       const itemName = $(event.currentTarget).find('.shopping-item').val();
       store.findAndUpdate(id, {name: itemName});
-      api.updateItem(id, {name: itemName});
+      api.updateItem(id, {name: itemName})
+        .catch(err => store.handleError (err.message));
+
       store.setItemIsEditing(id, false);
 
       render();
