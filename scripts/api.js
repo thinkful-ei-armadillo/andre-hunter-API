@@ -4,14 +4,24 @@ const api = (
   function() {
     const BASE_URL = 'https://thinkful-list-api.herokuapp.com/andre-hunter';
     const getItems = function() {
-      fetch(BASE_URL + '/items').then(res => 
-        res.json())
-        .then (json => {
-          console.log(json);
-        });
+      return fetch(BASE_URL + '/items');
     };
+
+    const createItem = function(name) {
+      let newItem = JSON.stringify({
+        name: name
+      });
+
+      return fetch(BASE_URL + '/items', {
+        method: 'POST',
+        headers: new Headers({'Content-Type': 'application/json'}),
+        body: newItem
+      });
+    };
+
     return { 
-      getItems
+      getItems,
+      createItem
     };
   }
 )();
