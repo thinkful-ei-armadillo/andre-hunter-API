@@ -7,6 +7,14 @@ const api = (
       return fetch(BASE_URL + '/items');
     };
 
+    const updateItem = function(id, updateData) {
+      return fetch(BASE_URL + '/items/' + id, {
+        method: 'PATCH',
+        headers: new Headers({'Content-Type': 'application/json'}),
+        body: JSON.stringify(updateData)
+      });
+    };
+
     const createItem = function(name) {
       let newItem = JSON.stringify({
         name: name
@@ -21,7 +29,8 @@ const api = (
 
     return { 
       getItems,
-      createItem
+      createItem,
+      updateItem
     };
   }
 )();
