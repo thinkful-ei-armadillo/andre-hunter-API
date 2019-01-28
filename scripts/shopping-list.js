@@ -103,6 +103,7 @@ const shoppingList = (function(){
       const id = getItemIdFromElement(event.currentTarget);
       // delete the item
       store.findAndDelete(id);
+      api.deleteItem(id);
       // render the updated shopping list
       render();
     });
