@@ -71,11 +71,14 @@ const shoppingList = (function(){
       api.createItem(newItemName)
         .then((item) => {
           store.addItem(item);
+          store.handleError('');
           shoppingList.render();
+          $('.js-shopping-list-entry').val('');
         })
-        .catch(err => store.handleError (err.message));
-
-      $('.js-shopping-list-entry').val('');
+        .catch(err => {
+          store.handleError(err.message);
+          shoppingList.render();
+        });
     });
   }
   
